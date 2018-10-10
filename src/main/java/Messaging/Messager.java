@@ -8,5 +8,6 @@ import java.util.List;
 public interface Messager {
 
     void preparePush(ArrayList<ArrayList<String>> channelsToNotify, List<Item> newItems);
-    void sendPush(String topic,String content);
+
+    void sendPush(String topic, String title, String pubDate);
 }

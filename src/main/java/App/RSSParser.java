@@ -34,11 +34,16 @@ public class RSSParser {
         out.close();
     }
 
+    private String getLastNewsGUID() throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(RSSParserUtils.SAVEFILE_PATH));
+        String lastGuid = br.readLine();
+        br.close();
+        return lastGuid;
+    }
+
     public boolean hasFeedChanged(List<Item> items) throws IOException {
 
-        BufferedReader br = new BufferedReader(new FileReader(RSSParserUtils.SAVEFILE_PATH));
-
-        if (!br.readLine().trim().equals(items.get(0).getGuid())) {
+        if (!getLastNewsGUID().equals(items.get(0).getGuid())) {
             return true;
         }
         return false;
@@ -46,13 +51,10 @@ public class RSSParser {
 
     public List<Item> getNewItems(List<Item> items) throws IOException {
 
-        BufferedReader br = new BufferedReader(new FileReader(RSSParserUtils.SAVEFILE_PATH));
-        String lastGuid = br.readLine();
-        br.close();
         List<Item> newItems = new ArrayList<Item>();
 
         for (Item item : items) {
-            if (!item.getGuid().equals(lastGuid)) {
+            if (!item.getGuid().equals(getLastNewsGUID())) {
                 newItems.add(item);
             } else {
                 break;
@@ -63,19 +65,14 @@ public class RSSParser {
 
     public ArrayList<ArrayList<String>> findChangedChannels(List<Item> newItems) throws IOException {
 
-
-        BufferedReader br = new BufferedReader(new FileReader(RSSParserUtils.SAVEFILE_PATH));
-        String lastGuid = br.readLine();
-        br.close();
-
         ArrayList<ArrayList<String>> changedChannelsPerItem = new ArrayList<ArrayList<String>>();
         for (Item item : newItems) {
             ArrayList<String> changedChannels = new ArrayList<String>();
 
-            checkLineasRegulares(item.getGuid(), lastGuid, changedChannels);
-            checkLineasAuzolinea(item.getGuid(), lastGuid, changedChannels);
-            checkLineasGautxori(item.getGuid(), lastGuid, changedChannels);
-            checkLineasEspeciales(item.getGuid(), lastGuid, changedChannels);
+            checkLineasRegulares(item.getGuid(), changedChannels);
+            checkLineasAuzolinea(item.getGuid(), changedChannels);
+            checkLineasGautxori(item.getGuid(), changedChannels);
+            checkLineasEspeciales(item.getGuid(), changedChannels);
 
             changedChannelsPerItem.add(changedChannels);
         }
@@ -84,7 +81,7 @@ public class RSSParser {
     }
 
 
-    private void checkLineasRegulares(String newItemId, String lastProcessedId, List<String> changedChannels) {
+    private void checkLineasRegulares(String newItemId, List<String> changedChannels) {
 
         List<Item> items;
         boolean itemExists = false;
@@ -103,7 +100,7 @@ public class RSSParser {
                 }
             }
             if (itemExists) {
-                if (!items.get(0).getGuid().equals(lastProcessedId)) {
+                if (!items.get(0).getGuid().equals(getLastNewsGUID())) {
                     changedChannels.add("" + i);
                 }
             }
@@ -111,7 +108,7 @@ public class RSSParser {
 
     }
 
-    private void checkLineasAuzolinea(String newItemId, String lastProcessedId, List<String> changedChannels) {
+    private void checkLineasAuzolinea(String newItemId, List<String> changedChannels) {
         List<Item> items;
         boolean itemExists = false;
 
@@ -129,14 +126,14 @@ public class RSSParser {
                 }
             }
             if (itemExists) {
-                if (!items.get(0).getGuid().equals(lastProcessedId)) {
+                if (!items.get(0).getGuid().equals(getLastNewsGUID())) {
                     changedChannels.add("A" + i);
                 }
             }
         }
     }
 
-    private void checkLineasGautxori(String newItemId, String lastProcessedId, List<String> changedChannels) {
+    private void checkLineasGautxori(String newItemId, List<String> changedChannels) {
         List<Item> items;
         boolean itemExists = false;
 
@@ -154,14 +151,14 @@ public class RSSParser {
                 }
             }
             if (itemExists) {
-                if (!items.get(0).getGuid().equals(lastProcessedId)) {
+                if (!items.get(0).getGuid().equals(getLastNewsGUID())) {
                     changedChannels.add("G" + i);
                 }
             }
         }
     }
 
-    private void checkLineasEspeciales(String newItemId, String lastProcessedId, List<String> changedChannels) {
+    private void checkLineasEspeciales(String newItemId, List<String> changedChannels) {
         List<Item> items;
         boolean itemExists = false;
 
@@ -179,7 +176,7 @@ public class RSSParser {
                 }
             }
             if (itemExists) {
-                if (!items.get(0).getGuid().equals(lastProcessedId)) {
+                if (!items.get(0).getGuid().equals(getLastNewsGUID())) {
                     changedChannels.add("E" + i);
                 }
             }

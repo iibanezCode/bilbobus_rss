@@ -31,7 +31,7 @@ public class MainApplication {
                 System.out.println("Nothing Changed");
             }
 
-            //parser.saveLastNewsGUID(items);
+            parser.saveLastNewsGUID(items);
         } catch (IOException e) {
             e.printStackTrace();
         }
