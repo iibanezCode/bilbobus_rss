@@ -70,7 +70,6 @@ public class RSSParser {
 
         ArrayList<ArrayList<String>> changedChannelsPerItem = new ArrayList<ArrayList<String>>();
         for (Item item : newItems) {
-            System.out.println(">>>> findChangedChannels proccessing following Guid: " + item.getGuid());
             ArrayList<String> changedChannels = new ArrayList<String>();
 
             checkLineasRegulares(item.getGuid(), lastGuid, changedChannels);

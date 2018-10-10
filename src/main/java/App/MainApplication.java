@@ -19,13 +19,11 @@ public class MainApplication {
         RSSParser parser = new RSSParser(RSSParserUtils.RSS_ROOT_URL);
 
         items = parser.fetchRSS();
-        System.out.println(">>>>RSS_ROOT_URL parsing complete");
 
         try {
             if (parser.hasFeedChanged(items)) {
                 List<Item> newItems;
                 newItems = parser.getNewItems(items);
-                System.out.println(">>>>Numero de Items Nuevos:" + newItems.size());
                 ArrayList<ArrayList<String>> changedChannels = parser.findChangedChannels(newItems);
                 Messager messager = new MessagerImpl();
                 messager.preparePush(changedChannels, newItems);
